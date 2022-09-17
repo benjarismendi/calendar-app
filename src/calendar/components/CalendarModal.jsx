@@ -9,10 +9,10 @@ import Modal from 'react-modal';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-import es from 'date-fns/locale/es';
 import { useCalendarStore, useUiStore } from '../../hooks';
 
-
+// Utilizamos esta importacion para traducir el date-picker.
+import es from 'date-fns/locale/es';
 registerLocale( 'es', es );
 
 
@@ -27,6 +27,8 @@ const customStyles = {
     },
 };
 
+// En este punto seteamos donde queremos que se cree el modal.
+// #root hace referencia al div con id root del index.html
 Modal.setAppElement('#root');
 
 export const CalendarModal = () => {
@@ -40,6 +42,7 @@ export const CalendarModal = () => {
         title: '',
         notes: '',
         start: new Date(),
+        // funcion addHours, importada de date-fns, agrega determinada cantidad de horas a una fecha.
         end: addHours( new Date(), 2),
     });
 
@@ -59,7 +62,6 @@ export const CalendarModal = () => {
       
     }, [ activeEvent ])
     
-
 
     const onInputChanged = ({ target }) => {
         setFormValues({
@@ -117,11 +119,14 @@ export const CalendarModal = () => {
 
             <div className="form-group mb-2">
                 <label>Fecha y hora inicio</label>
+
                 <DatePicker 
                     selected={ formValues.start }
                     onChange={ (event) => onDateChanged(event, 'start') }
                     className="form-control"
+                    // Se pueden ver mas tipos de formato en la documentacion.
                     dateFormat="Pp"
+                    // Con showTimeSelect, podemos seleccionar la hora.
                     showTimeSelect
                     locale="es"
                     timeCaption="Hora"
@@ -131,6 +136,7 @@ export const CalendarModal = () => {
             <div className="form-group mb-2">
                 <label>Fecha y hora fin</label>
                 <DatePicker 
+                    // Se puede establecer una fecha minima
                     minDate={ formValues.start }
                     selected={ formValues.end }
                     onChange={ (event) => onDateChanged(event, 'end') }
