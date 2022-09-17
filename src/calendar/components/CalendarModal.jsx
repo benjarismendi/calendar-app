@@ -46,6 +46,7 @@ export const CalendarModal = () => {
         end: addHours( new Date(), 2),
     });
 
+    // En este useMemo retornamos en la constante titleClass un string is-invalid, la cual dara un estilo de error al input del titulo.
     const titleClass = useMemo(() => {
         if ( !formSubmitted ) return '';
 
@@ -85,8 +86,11 @@ export const CalendarModal = () => {
         event.preventDefault();
         setFormSubmitted(true);
 
+        // Verificamos la diferencia en segundos entre las dos fechas.
+        // Esto dara un valor numerico, si el valor es negativo quiere decir que la fecha de inicio es mayor a la fecha del final.
+        // Si al momento de realizar submit, solo hay seleccionada una fecha, el resultado es NaN.
         const difference = differenceInSeconds( formValues.end, formValues.start );
-        
+        // isNaN(), retorna true o false.
         if ( isNaN( difference ) || difference <= 0 ) {
             Swal.fire('Fechas incorrectas','Revisar las fechas ingresadas','error');
             return;
@@ -129,6 +133,7 @@ export const CalendarModal = () => {
                     // Con showTimeSelect, podemos seleccionar la hora.
                     showTimeSelect
                     locale="es"
+                    // Titulo del timeCaption picker
                     timeCaption="Hora"
                 />
             </div>
@@ -143,7 +148,7 @@ export const CalendarModal = () => {
                     className="form-control"
                     dateFormat="Pp"
                     showTimeSelect
-                    locale="es"
+                    locale="es"   
                     timeCaption="Hora"
                 />
             </div>
