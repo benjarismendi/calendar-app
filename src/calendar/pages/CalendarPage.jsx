@@ -1,18 +1,27 @@
+import { addHours } from 'date-fns';
 import { useState } from 'react';
 import { Calendar } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
-import { Navbar, CalendarEvent, CalendarModal, FabAddNew, FabDelete} from '../';
+import { Navbar, CalendarEvent, CalendarModal} from '../';
 
 import { localizer, getMessagesES } from '../../helpers';
-import { useUiStore, useCalendarStore } from '../../hooks';
 
+const events =   [{  
+  title: 'Ver One-Piece',
+  notes: 'Ya van 4 capítulos de humo.',
+  start: new Date(),
+  end: addHours( new Date(), 2 ),
+  bgColor: '#fafafa',
+  user: {
+    _id: '123',
+    name: 'SkillFactory'
+  }
+}];
 
 export const CalendarPage = () => {
 
-  const { openDateModal } = useUiStore();
-  const { events, setActiveEvent } = useCalendarStore();
-
+  
   // Seteamos una vista por default, utilizamos localStorage.
   const [ lastView, setLastView ] = useState(localStorage.getItem('lastView') || 'week' );
 
@@ -36,13 +45,13 @@ export const CalendarPage = () => {
 
   
   const onDoubleClick = ( event ) => {
-    // console.log({ doubleClick: event });
-    openDateModal();
+    console.log({ doubleClick: event });
+    
   }
 
   const onSelect = ( event ) => {
-    // console.log({ click: event });
-    setActiveEvent( event );
+    console.log({ click: event });
+    
   }
 
   const onViewChanged = ( event ) => {
@@ -62,6 +71,7 @@ export const CalendarPage = () => {
         // Localizer lo exportamos desde calendarLocalizer.
         localizer={ localizer }
         events={ events }
+        // vista por default, la caual almacenamos en el localStorage.
         defaultView={ lastView }
         startAccessor="start"
         endAccessor="end"
@@ -82,10 +92,7 @@ export const CalendarPage = () => {
 
 
       <CalendarModal />
-      
-      <FabAddNew />
-      <FabDelete />
-
+           
 
     </>
   )
