@@ -6,20 +6,14 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { Navbar, CalendarEvent, CalendarModal} from '../';
 
 import { localizer, getMessagesES } from '../../helpers';
+import { useCalendarStore, useUiStore } from '../../hooks';
+import { FabAddNew } from '../components/FabAddNew';
 
-const events =   [{  
-  title: 'Ver One-Piece',
-  notes: 'Ya van 4 capítulos de humo.',
-  start: new Date(),
-  end: addHours( new Date(), 2 ),
-  bgColor: '#fafafa',
-  user: {
-    _id: '123',
-    name: 'SkillFactory'
-  }
-}];
 
 export const CalendarPage = () => {
+
+  const { openDateModal } = useUiStore();
+  const { events, activeEvent, setActiveEvent } = useCalendarStore();
 
   
   // Seteamos una vista por default, utilizamos localStorage.
@@ -45,13 +39,13 @@ export const CalendarPage = () => {
 
   
   const onDoubleClick = ( event ) => {
-    console.log({ doubleClick: event });
-    
+    // console.log({ doubleClick: event });
+    openDateModal();
   }
 
   const onSelect = ( event ) => {
-    console.log({ click: event });
-    
+    // console.log({ click: event });
+    setActiveEvent( event );
   }
 
   const onViewChanged = ( event ) => {
@@ -90,6 +84,7 @@ export const CalendarPage = () => {
         onView={ onViewChanged }
       />
 
+        <FabAddNew />
 
       <CalendarModal />
            

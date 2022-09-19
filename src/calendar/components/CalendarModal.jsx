@@ -11,6 +11,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 // Utilizamos esta importacion para traducir el date-picker.
 import es from 'date-fns/locale/es';
+import { useCalendarStore, useUiStore } from '../../hooks';
 registerLocale( 'es', es );
 
 
@@ -31,7 +32,9 @@ Modal.setAppElement('#root');
 
 export const CalendarModal = () => {
 
-    const [isOpen, setIsOpen] = useState(true);
+    const {isDateModalOpen, closeDateModal} = useUiStore();
+
+    const { activeEvent, startSavingEvent } = useCalendarStore();
 
     const [ formSubmitted, setFormSubmitted ] = useState(false);
 
@@ -42,6 +45,14 @@ export const CalendarModal = () => {
         // funcion addHours, importada de date-fns, agrega determinada cantidad de horas a una fecha.
         end: addHours( new Date(), 2),
     });
+
+    useEffect(() => {
+     if(activeEvent !== null) {
+        setFormValues({...activeEvent})
+     }
+    
+    }, [activeEvent])
+    
 
     // En este useMemo retornamos en la constante titleClass un string is-invalid, la cual dara un estilo de error al input del titulo.
     const titleClass = useMemo(() => {
@@ -70,7 +81,7 @@ export const CalendarModal = () => {
 
     const onCloseModal = () => {
         console.log('cerrando modal')
-        setIsOpen(false)
+        closeDateModal();
     }
 
     const onSubmit = async( event ) => {
@@ -89,18 +100,18 @@ export const CalendarModal = () => {
         
         if ( formValues.title.length <= 0 ) return;
         
-        console.log(formValues);
+        await startSavingEvent( formValues )
         setFormSubmitted(false);
         // TODO: 
         // Remover errores en pantalla
-        // cerrar modal
+        closeDateModal();
     }
 
 
 
   return (
     <Modal
-        isOpen={ isOpen }
+        isOpen={ isDateModalOpen }
         onRequestClose={ onCloseModal }
         style={ customStyles }
         className="modal"
