@@ -1,18 +1,21 @@
+import { addHours } from 'date-fns';
 import { useState } from 'react';
 import { Calendar } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
-import { Navbar, CalendarEvent, CalendarModal, FabAddNew, FabDelete} from '../';
+import { Navbar, CalendarEvent, CalendarModal} from '../';
 
 import { localizer, getMessagesES } from '../../helpers';
-import { useUiStore, useCalendarStore } from '../../hooks';
+import { useCalendarStore, useUiStore } from '../../hooks';
+import { FabAddNew } from '../components/FabAddNew';
 
 
 export const CalendarPage = () => {
 
   const { openDateModal } = useUiStore();
-  const { events, setActiveEvent } = useCalendarStore();
+  const { events, activeEvent, setActiveEvent } = useCalendarStore();
 
+  
   // Seteamos una vista por default, utilizamos localStorage.
   const [ lastView, setLastView ] = useState(localStorage.getItem('lastView') || 'week' );
 
@@ -62,6 +65,7 @@ export const CalendarPage = () => {
         // Localizer lo exportamos desde calendarLocalizer.
         localizer={ localizer }
         events={ events }
+        // vista por default, la caual almacenamos en el localStorage.
         defaultView={ lastView }
         startAccessor="start"
         endAccessor="end"
@@ -80,12 +84,10 @@ export const CalendarPage = () => {
         onView={ onViewChanged }
       />
 
+        <FabAddNew />
 
       <CalendarModal />
-      
-      <FabAddNew />
-      <FabDelete />
-
+           
 
     </>
   )

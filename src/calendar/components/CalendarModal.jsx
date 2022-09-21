@@ -9,10 +9,9 @@ import Modal from 'react-modal';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-import { useCalendarStore, useUiStore } from '../../hooks';
-
 // Utilizamos esta importacion para traducir el date-picker.
 import es from 'date-fns/locale/es';
+import { useCalendarStore, useUiStore } from '../../hooks';
 registerLocale( 'es', es );
 
 
@@ -33,7 +32,8 @@ Modal.setAppElement('#root');
 
 export const CalendarModal = () => {
 
-    const { isDateModalOpen, closeDateModal } = useUiStore();
+    const {isDateModalOpen, closeDateModal} = useUiStore();
+
     const { activeEvent, startSavingEvent } = useCalendarStore();
 
     const [ formSubmitted, setFormSubmitted ] = useState(false);
@@ -46,6 +46,14 @@ export const CalendarModal = () => {
         end: addHours( new Date(), 2),
     });
 
+    useEffect(() => {
+     if(activeEvent !== null) {
+        setFormValues({...activeEvent})
+     }
+    
+    }, [activeEvent])
+    
+
     // En este useMemo retornamos en la constante titleClass un string is-invalid, la cual dara un estilo de error al input del titulo.
     const titleClass = useMemo(() => {
         if ( !formSubmitted ) return '';
@@ -56,14 +64,7 @@ export const CalendarModal = () => {
 
     }, [ formValues.title, formSubmitted ])
 
-    useEffect(() => {
-      if ( activeEvent !== null ) {
-          setFormValues({ ...activeEvent });
-      }    
-      
-    }, [ activeEvent ])
     
-
     const onInputChanged = ({ target }) => {
         setFormValues({
             ...formValues,
@@ -79,6 +80,7 @@ export const CalendarModal = () => {
     }
 
     const onCloseModal = () => {
+        console.log('cerrando modal')
         closeDateModal();
     }
 
@@ -98,12 +100,11 @@ export const CalendarModal = () => {
         
         if ( formValues.title.length <= 0 ) return;
         
-        console.log(formValues);
-
-        // TODO: 
-        await startSavingEvent( formValues );
-        closeDateModal();
+        await startSavingEvent( formValues )
         setFormSubmitted(false);
+        // TODO: 
+        // Remover errores en pantalla
+        closeDateModal();
     }
 
 
