@@ -4,10 +4,13 @@ import { AuthLayout } from "../layout/AuthLayout";
 import { useFormV } from "../../hooks/useFormV";
 import {loginFormFields, loginValidations} from '../index'
 import { InputForm } from "../components/inputForm";
+import { useAuthStore } from "../../hooks/useAuthStore";
 
 export const LoginPage = () => {
 
-  const [isSubmit, setIsSubmit] = useState(false)
+  const [isSubmit, setIsSubmit] = useState(false);
+
+  const { startLogin } = useAuthStore();
 
   const {
     email,
@@ -23,7 +26,8 @@ export const LoginPage = () => {
     event.preventDefault();
     setIsSubmit(true);
     if(!isFormValid) return;
-    console.log(formState)
+
+    startLogin(formState);
   }
 
   return (
