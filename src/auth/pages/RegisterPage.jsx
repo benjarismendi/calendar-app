@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
+import { useAuthStore } from "../../hooks/useAuthStore";
 import { useFormV } from "../../hooks/useFormV";
 import { InputForm } from "../components/inputForm";
 import { registerFormFields, registerValidations } from "../index";
@@ -7,6 +9,7 @@ import { AuthLayout } from "../layout/AuthLayout";
 
 export const RegisterPage = () => {
   const [isSubmit, setIsSubmit] = useState(false);
+  const {startRegister} = useAuthStore();
 
   const {
     username,
@@ -26,7 +29,12 @@ export const RegisterPage = () => {
     event.preventDefault();
     setIsSubmit(true);
     if (!isFormValid) return;
-    //TODO: validacion de password iguales
+    // Validacion de password iguales
+    if (password !== password2) {
+      Swal.fire("Error en el registro", 'Las contraseñas deben ser iguales', "error");
+      return;
+    }
+    startRegister(formState);
     console.log(formState);
 
   };
