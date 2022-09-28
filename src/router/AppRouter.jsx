@@ -4,15 +4,17 @@ import { LoginPage, RegisterPage } from '../auth';
 
 import { CalendarPage } from '../calendar';
 import { useAuthStore } from '../hooks/useAuthStore';
+import { useLocalUser } from '../hooks/useLocalUser';
 
 
 export const AppRouter = () => {
 
     const { checkAuthToken, status } = useAuthStore();
+    const { localUser } = useLocalUser();
    
     useEffect(() => {
       checkAuthToken();
-    }, [])
+    }, [localUser])
 
     if(status === 'checking') return <h1>Cargando...</h1>
     
